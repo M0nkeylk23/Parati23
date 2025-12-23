@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti</title>
+
+<style>
+    body{
+        margin:0; padding:0;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        overflow:hidden;
+        background:black;
+        font-family:"Helvetica Neue", sans-serif;
+    }
+
+    video{
+        position:fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        object-fit:cover;
+        z-index:-1;
+    }
+
+    .container{
+        width:90%; max-width:420px;
+        text-align:center;
+        display:none;
+        animation: fadeIn .7s ease forwards;
+        padding:25px;
+        border-radius:22px;
+        backdrop-filter: blur(18px);
+        background:rgba(255,255,255,.12);
+        color:white;
+        box-shadow:0 0 25px rgba(255,255,255,.1);
+    }
+
+    h2{font-size:22px; font-weight:600;}
+    p{font-size:17px; line-height:1.5; margin-bottom:15px;}
+
+    button{
+        margin-top:18px;
+        padding:12px 26px;
+        border:none;
+        border-radius:18px;
+        background:white;
+        color:black;
+        font-size:17px;
+        font-weight:600;
+        cursor:pointer;
+        transition:.3s;
+    }
+    button:hover{ background:#e0e0e0; transform:scale(1.05); }
+
+    @keyframes fadeIn{
+        from{opacity:0; transform:translateY(15px);}
+        to{opacity:1; transform:translateY(0);}
+    }
+
+    .btns{
+        display:flex;
+        justify-content:space-between;
+        gap:15px;
+    }
+
+    .heart{
+        position:fixed;
+        font-size:28px;
+        animation:floatUp 3s linear forwards;
+        color:#ff5f7e;
+    }
+    @keyframes floatUp{
+        0%{opacity:0; transform:translateY(0) scale(1);}
+        20%{opacity:1;}
+        100%{opacity:0; transform:translateY(-200px) scale(1.6);}
+    }
+</style>
+</head>
+<body>
+<script>
+document.addEventListener("touchstart", function () {
+  const video = document.getElementById("bg-video");
+  if (video.paused) video.play();
+}, { once: true });
+</script>
+
+<video
+  autoplay
+  muted
+  loop
+  playsinline
+  webkit-playsinline
+  preload="auto"
+  id="bg-video">
+  <source src="fondo.mp4" type="video/mp4">
+</video>
+
+
+
+<!-- TARJETA 1 - CUENTA REGRESIVA -->
+<div id="card1" class="container">
+    <h2>Algo especial está por revelarse...</h2>
+    <p>La espera termina....</p>
+    <p id="timer" style="font-size:26px; font-weight:bold;">Calculando...</p>
+</div>
+
+<!-- TARJETA 2 - CONTEXTO -->
+<div id="card2" class="container">
+    <h2>Antes de decirte algo importante...</h2>
+    <p>Solo quiero que sepas que desde que llegaste a mi vida,<br>
+       encontré razones nuevas para sonreír y motivos para soñar,<br>
+       y un lugar donde mi corazón quiere quedarse.</p>
+    <button onclick="showCard(3)">Continuar</button>
+</div>
+
+<!-- TARJETA 3 - PREGUNTA -->
+<div id="card3" class="container">
+    <h2>Tengo una pregunta para ti</h2>
+    <p>¿Puedo ser tu Novio?</p>
+    <div class="btns">
+        <button onclick="sayYes()">Sí</button>
+        <button onclick="sayNo()">No</button>
+    </div>
+</div>
+
+<!-- TARJETA 4 - RESPUESTA SÍ -->
+<div id="card4" class="container">
+    <h2>Entonces aquí comienza algo hermoso</h2>
+    <p>Tu "Sí" no solo fue una palabra,<br>
+       fue un nuevo camino, una historia naciendo,<br>
+       magia en su forma más pura.</p>
+    <p>Gracias por elegirme. Gracias por ser tú.</p>
+</div>
+
+<!-- TARJETA NO -->
+<div id="cardNo" class="container">
+    <h2>¿Segura?</h2>
+    <p>No podría imaginar este camino sin ti...<br>
+       ¿Quieres intentarlo otra vez?</p>
+    <button onclick="showCard(3)">Volver</button>
+</div>
+
+<script>
+/* ========= MOSTRAR TARJETAS SECUENCIALES ========= */
+function showCard(num){
+    document.querySelectorAll(".container").forEach(c=>c.style.display="none");
+    document.getElementById("card"+num).style.display="block";
+}
+
+/* ========= CUENTA REGRESIVA HASTA 25-12-2025 ========= */
+const objetivo = new Date("2025-12-23T03:10:00").getTime();
+showCard(1);
+
+let countdown = setInterval(()=>{
+    const ahora = new Date().getTime();
+    const restante = objetivo - ahora;
+
+    if(restante <= 0){
+        clearInterval(countdown);
+        showCard(2);
+        return;
+    }
+
+    let dias = Math.floor(restante / (1000*60*60*24));
+    let horas = Math.floor((restante%(1000*60*60*24))/(1000*60*60));
+    let minutos = Math.floor((restante%(1000*60*60))/(1000*60));
+    let segundos = Math.floor((restante%(1000*60))/1000);
+
+    document.getElementById("timer").innerText =
+        dias+"d "+horas+"h "+minutos+"m "+segundos+"s";
+},1000);
+
+/* ========= ACCIONES DE BOTONES ========= */
+function sayYes(){
+    showCard(4);
+    for(let i=0;i<40;i++){
+        let heart=document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML="❤";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.top="100vh";
+        document.body.appendChild(heart);
+        setTimeout(()=>heart.remove(),3000);
+    }
+}
+function sayNo(){ showCard("No"); }
+</script>
+
+</body>
+</html>
